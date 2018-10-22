@@ -57,6 +57,9 @@ def good_tries(num_tries)
   end
 end
 
+# If the filename is valid and the number of num_tries
+# is a positive integer, create a thread for each IP address
+# and ping them all.
 if file_exists(ARGV[0]) && good_tries(ARGV[1].to_i)
   puts 'Pinging...'
   threads = $ips.map do |ip|
