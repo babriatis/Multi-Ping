@@ -61,13 +61,28 @@ end
 # is a positive integer, create a thread for each IP address
 # and ping them all.
 if file_exists(ARGV[0]) && good_tries(ARGV[1].to_i)
-  printing = Thread.new do
-    print "Pinging"
-    loop do
-      sleep 0.4
-      print "."
+  # printing = Thread.new do
+  #   print "Pinging"
+  #   loop do
+  #     sleep 0.4
+  #     print "."
+  #   end
+  # end.run
+  waiting = Thread.new do
+    spinner = Enumerator.new do |e|
+      loop do
+        e.yield '|'
+        e.yield '/'
+        e.yield '-'
+        e.yield '\\'
+      end
     end
-  end.run
+
+    loop do
+      printf("\rPinging %s", spinner.next)
+      sleep(0.1)
+    end
+  end
 
   threads = $ips.map do |ip|
     Thread.new { Thread.current[:result] = `ping -n #{$num_pings} #{ip}` }
